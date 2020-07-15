@@ -1,0 +1,129 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.1.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'checkstyle'
+	id 'jacoco'
+	id 'com.github.spotbugs' version '3.0.0'
+	id 'org.asciidoctor.jvm.convert' version '3.1.0'
+}
+
+group = 'com.paulasantana'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '14'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation('org.springframework.restdocs:spring-restdocs-asciidoctor')
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'mysql:mysql-connector-java'
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+	testImplementation('org.springframework.restdocs:spring-restdocs-mockmvc')
+}
+/*
+sourceSets {
+	contractTest{
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/contractTest')
+		}
+	}
+}
+*/
+test {
+	useJUnitPlatform()
+}
+
+/*
+task contractTest(type: Test){
+	testClassesDirs(sourceSets.contractTest.output.classesDirs)
+	classpath(sourceSets.contractTest.runtimeClasspath)
+
+	tesLoggin {
+		events 'passed' , 'skipped', 'failed'
+	}
+}
+*/
+jacoco { toolVersion = '0.8.2'}
+
+jacocoTestReport{
+	reports {
+		xml.enabled(false)
+		csv.enabled(false)
+		html.destination file('${buildDir}/jacocoHtml')
+	}
+	//executionData(test, contractTest)
+	executionData(test)
+}
+
+spotbugs { toolVersion = '3.1.12'}
+
+gradle.taskGraph.whenReady { taskGraph ->
+	tasks.spotbugsMain.onlyIf { true }
+	tasks.spotbugsTest.onlyIf { false }
+	//tasks.spotbugsContractTest.onlyIf { false}
+}
+/*
+ext { snippetsDir = file('build/snippets')}
+
+contractTest { outputs.dir snippetsDir }
+
+
+asciidoctor {
+	attributes 'snippets': snippetsDir
+	sourceDir = file('src/main/asciidoc')
+	outputDir = file('build/asciidoc')
+	inputs.dir snippetsDir
+	dependsOn contractTest
+}
+
+task copyRestDocs(type: Copy){
+	dependsOn asciidoctor
+	from "${asciidoctor.outputDir}"
+	into "${project.buildDir}/resources/main/static/docs"
+}
+
+bootJar {
+	dependsOn copyRestDocs
+}
+
+bootRun {
+	dependsOn copyRestDocs
+}
+*/
+checkstyle {
+	configFile = file("${rootDir}/checkstyle.xml")
+	maxErrors = 0
+	maxWarnings = 0
+	ignoreFailures = false
+	toolVersion = "8.29"
+}
+
+task codeQualityStage {
+	dependsOn build
+	dependsOn spotbugsMain
+	dependsOn checkstyleMain
+	doLast {
+		println 'Code Quality Done'
+	}
+}
+
+task all{
+	dependsOn clean
+	dependsOn build
+	//dependsOn test
+	//dependsOn contractTest
+	dependsOn spotbugsMain
+	dependsOn checkstyleMain
+	//dependsOn copyRestDocs
+	doLast {
+		println 'All done'
+	}
+}
