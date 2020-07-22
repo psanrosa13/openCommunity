@@ -1,12 +1,12 @@
-package com.paulasantana.opencommunity.project;
+package com.paulasantana.opencommunity.usecase.project;
 
+import com.paulasantana.opencommunity.commons.Person;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
@@ -21,15 +21,11 @@ public class Project {
   private String name;
 
   @NotBlank
+  private Person responsible;
+
+  @NotBlank
   @Enumerated(EnumType.STRING)
   private LanguageEnum language;
-
-  @NotBlank
-  private String responsible;
-
-  @Email
-  @NotBlank
-  private String email;
 
   @Min(value = 300)
   @NotBlank
@@ -40,4 +36,5 @@ public class Project {
   private String github;
 
   private String otherContact;
+
 }

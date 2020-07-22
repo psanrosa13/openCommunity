@@ -1,4 +1,4 @@
-package com.paulasantana.opencommunity.project;
+package com.paulasantana.opencommunity.usecase.project;
 
 import java.util.List;
 import javax.validation.Valid;
@@ -34,6 +34,12 @@ public class ProjectController {
     projectService.deleteById(id);
   }
 
+  /**
+   * Consulta lista de projetos.
+   * @param page paginação da consulta.
+   * @param language filtro para linguagem.
+   * @return
+   */
   @GetMapping
   public List<Project> consultList(Pageable page,
                                    @RequestParam(name = "language") String language) {

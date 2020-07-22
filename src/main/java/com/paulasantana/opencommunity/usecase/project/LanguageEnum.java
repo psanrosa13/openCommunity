@@ -1,4 +1,4 @@
-package com.paulasantana.opencommunity.project;
+package com.paulasantana.opencommunity.usecase.project;
 
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public enum LanguageEnum {
     this.description = description;
   }
 
-  public static boolean notContainsLanguage(String language){
+  public static boolean notContainsLanguage(String language) {
     return Arrays.stream(LanguageEnum.values())
         .noneMatch(l -> l.description.toUpperCase().equals(language.toUpperCase()));
   }
