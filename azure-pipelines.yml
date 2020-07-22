@@ -21,3 +21,9 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'build'
+    #sonarQubeRunAnalysis: false 
+    #sqGradlePluginVersionChoice: 'specify' # Required when sonarQubeRunAnalysis == True# Options: specify, build
+    #sonarQubeGradlePluginVersion: '2.6.1' # Required when sonarQubeRunAnalysis == True && SqGradlePluginVersionChoice == Specify
+    #checkStyleRunAnalysis: false # Optional
+    findBugsRunAnalysis: true
+    #pmdRunAnalysis: false # Optional
